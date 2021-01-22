@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Untitled Document</title>
+<style>
+
+.item {
+  margin: 5px;
+  padding: 5px
+}
+
+.item label {
+  display: block;
+  margin-right: 20px
+}
+
+.cell {
+  display: inline-block;
+  padding: 5px 10px 10px 10px;
+  margin: 10px;
+  border: 1px solid #ccc;
+  background: #ccc;
+  text-align: center;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+
+}
+
+.cell {
+  width: 25%;
+}
+
+h2 {
+  font-size: 17px
+}
+
+	
+</style>	
+
+	
+</head>
+
+<body>
+<div class="cell">
+  <h2>
+    Current liquidity
+  </h2>
+  <div class="item">
+    <label>ESD</label><input id="esdLiqInit" type="text" />
+  </div>
+  <div class="item">
+    <label>USDC</label><input id="usdcLiqInit" type="text" />
+  </div>
+</div>
+<div class="cell">
+  <h2>
+    Transaction
+  </h2>
+  <div class="item">
+    <label>Buy or sell</label><input id="bos" type="text" />
+  </div>
+  <div class="item">
+    <label>Price</label><input id="priceL" type="text" disabled />
+  </div>
+</div>
+<div class="cell">
+  <h2>
+    New Liquidity
+  </h2>
+  <div class="item">
+    <label>ESD</label><input id="esdLiqNew" type="text" disabled />
+  </div>
+  <div class="item">
+    <label>USDC</label><input id="usdcLiqNew" type="text" disabled />
+  </div>
+</div>
+<script>
+const esdLiqInit = document.getElementById('esdLiqInit');
+const usdcLiqInit = document.getElementById('usdcLiqInit');
+const esdLiqNew = document.getElementById('esdLiqNew');
+const usdcLiqNew = document.getElementById('usdcLiqNew');
+const priceL = document.getElementById('priceL');
+const bos = document.getElementById('bos');
+
+esdLiqInit.value = 4720636;
+usdcLiqInit.value = 1948844;
+priceL.value = usdcLiqInit.value / esdLiqInit.value;
+const k = esdLiqInit.value * usdcLiqInit.value;
+
+
+
+const liquidityHandler = function(e) {
+  bos.value = 0;
+  priceL.value = usdcLiqInit.value / esdLiqInit.value;
+}
+const bosHandler = function(e) {
+
+  if (bos.value < 0) {
+
+    esdLiqNew.value = Number(esdLiqInit.value) - Number(bos.value);
+    usdcLiqNew.value = k / esdLiqNew.value;
+
+  } else if (bos.value > 0) {
+
+    usdcLiqNew.value = Number(usdcLiqInit.value) + Number(bos.value);
+    esdLiqNew.value = k / usdcLiqNew.value;
+
+  }
+
+  priceL.value = usdcLiqNew.value / esdLiqNew.value;
+}
+
+usdcLiqInit.addEventListener('input', liquidityHandler);
+esdLiqInit.addEventListener('input', liquidityHandler);
+bos.addEventListener('input', bosHandler);
+
+
+	
+</script>	
+</body>
+</html>
