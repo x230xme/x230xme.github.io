@@ -4,9 +4,10 @@
 <meta charset="UTF-8">
 <title>Uniswap XYK Calculator</title>
 <style>
+@import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
 body {
-  background: #2b2f37;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  background-color: rgb(44, 47, 54);
+  font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   color: #fff;
 }
 a {color: #fff;}
@@ -17,20 +18,21 @@ a {color: #fff;}
   flex-direction: column;
 }
 .item {
-    margin: 5px;
-    padding: 15px 5px;
-    border-radius: 20px;
-    border: 1px solid rgb(50 53 60);
+  margin: 5px;
+  padding: 15px 10px;
+  border-radius: 20px;
+  border: 1px solid rgb(50 53 60);
 }
 
 .item label {
-    margin-right: 7px;
-    text-align: right;
-    font-size: 20px;
+  margin:0 0 3px 0;
+  text-align: left;
+  font-size: 19px;
+  display: block;
 }
 
 .cell {
-  padding: 5px 10px 10px 10px;
+  padding: 5px 10px 5px 10px;
   margin: 0;
   text-align: center;
   width: 90%;
@@ -39,11 +41,15 @@ input {
   outline: none;
   border: none;
   flex: 1 1 auto;
-  background-color: rgb(33, 36, 41);
   padding: 10px;
   font-size: 24px;
   color: #fff;
   background-color: rgba(255,255,255,0.01);
+  width: 100%;
+  margin: 0;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+  font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 }
 @media (min-width: 500px){
 
@@ -61,23 +67,27 @@ h2 {
     font-weight: 300;
 }
 #currentlLiquidity {
-    width: 80%;
-    background-color: rgba(0, 0, 0, 0.1);
-
+  width: 80%;
+  background-color: rgba(0, 0, 0, 0.1);
+  margin-top: -3px;
 }
 #newLiquidity {
-    border-radius: 0 0 10px 10px;
-    width: 80%;
-    background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 0 0 10px 10px;
+  width: 80%;
+  background-color: rgba(0, 0, 0, 0.1);
 }
 #transaction {
-      border-radius:10px;
-      background: #212429;
+  background: #212429;
+  box-shadow: rgba(0, 0, 0, 0.01) 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 4px 8px, rgba(0, 0, 0, 0.04) 0px 16px 24px, rgba(0, 0, 0, 0.01) 0px 24px 32px;
+  border-radius: 30px;
 
 }
 #transaction p {
       line-height:1.3;
       padding:5px;
+}
+#bos {
+    margin-bottom: 10px;
 }
 </style>
 
@@ -87,14 +97,13 @@ h2 {
 <body>
 <div class="box">
 	<p>The numbers in <em>Current liquidity</em> taken from the "pooled tokens" values found <a href="https://info.uniswap.org/pair/0x88ff79eb2bc5850f27315415da8685282c7610f9">here</a>. Learn more about this <a href="https://medium.com/scalar-capital/uniswap-a-unique-exchange-f4ef44f807bf#:~:text=Uniswap's%20goal%20for%20this%20particular,and%20k%20is%20the%20product.">here</a>.</p>
-	
+
 <div class="cell" id="transaction">
 <p>How to use: fill in the <em>Buy and Sell</em> below to see how much the price will move based on current liquidity. Positive numbers for <em>buying ESD</em>, negative numbers for <em>selling ESD</em>.</p>
 
   <div class="item">
     <label>Buy or sell</label><input id="bos" type="text" />
-  </div>
-  <div class="item">
+
     <label>Price</label><input id="priceL" type="text" disabled />
   </div>
 </div>
@@ -128,10 +137,9 @@ const url = 'https://api.ethplorer.io/getAddressInfo/0x88ff79eb2bc5850f27315415d
 fetch(url)
 .then(res => res.json())
 .then((data) => {
+
 const esdUniVal = data.tokens[1].balance.toLocaleString('fullwide', {useGrouping:false})/1000000000000000000;
 const usdcUniVal = data.tokens[2].balance.toLocaleString('fullwide', {useGrouping:false})/1000000;
-
-
 const esdLiqInit = document.getElementById('esdLiqInit');
 const usdcLiqInit = document.getElementById('usdcLiqInit');
 const esdLiqNew = document.getElementById('esdLiqNew');
@@ -142,8 +150,10 @@ const bos = document.getElementById('bos');
 esdLiqInit.value = esdUniVal;
 usdcLiqInit.value = usdcUniVal;
 priceL.value = usdcLiqInit.value / esdLiqInit.value;
-const k = esdLiqInit.value * usdcLiqInit.value;
 
+const k = esdLiqInit.value * usdcLiqInit.value;
+bos.focus();
+bos.select();
 
 
 const liquidityHandler = function(e) {
