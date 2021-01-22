@@ -41,7 +41,7 @@ h2 {
 </head>
 
 <body>
-	<p>Update the numbers in the left hand column from the "pooled tokens" values found <a href="https://info.uniswap.org/pair/0x88ff79eb2bc5850f27315415da8685282c7610f9">here</a>. Learn more about this <a href="https://medium.com/scalar-capital/uniswap-a-unique-exchange-f4ef44f807bf#:~:text=Uniswap's%20goal%20for%20this%20particular,and%20k%20is%20the%20product.">here</a>.</p>
+	<p>The numbers in the left hand column taken from the "pooled tokens" values found <a href="https://info.uniswap.org/pair/0x88ff79eb2bc5850f27315415da8685282c7610f9">here</a>. Learn more about this <a href="https://medium.com/scalar-capital/uniswap-a-unique-exchange-f4ef44f807bf#:~:text=Uniswap's%20goal%20for%20this%20particular,and%20k%20is%20the%20product.">here</a>.</p>
 <div class="cell">
   <h2>
     Current liquidity
@@ -77,6 +77,14 @@ h2 {
   </div>
 </div>
 <script>
+const url = 'https://api.ethplorer.io/getAddressInfo/0x88ff79eb2bc5850f27315415da8685282c7610f9?apiKey=freekey'
+fetch(url)
+.then(res => res.json())
+.then((data) => {
+const esdUniVal = data.tokens[1].balance.toLocaleString('fullwide', {useGrouping:false})/1000000000000000000;
+const usdcUniVal = data.tokens[2].balance.toLocaleString('fullwide', {useGrouping:false})/1000000;
+
+
 const esdLiqInit = document.getElementById('esdLiqInit');
 const usdcLiqInit = document.getElementById('usdcLiqInit');
 const esdLiqNew = document.getElementById('esdLiqNew');
@@ -84,8 +92,8 @@ const usdcLiqNew = document.getElementById('usdcLiqNew');
 const priceL = document.getElementById('priceL');
 const bos = document.getElementById('bos');
 
-esdLiqInit.value = 4720636;
-usdcLiqInit.value = 1948844;
+esdLiqInit.value = esdUniVal;
+usdcLiqInit.value = usdcUniVal;
 priceL.value = usdcLiqInit.value / esdLiqInit.value;
 const k = esdLiqInit.value * usdcLiqInit.value;
 
@@ -115,6 +123,8 @@ const bosHandler = function(e) {
 usdcLiqInit.addEventListener('input', liquidityHandler);
 esdLiqInit.addEventListener('input', liquidityHandler);
 bos.addEventListener('input', bosHandler);
+
+});
 
 
 	
