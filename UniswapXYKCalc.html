@@ -71,8 +71,9 @@ input {
   }
 }
 h2 {
-    font-size: 20px;
+    font-size: 17px;
     font-weight: 300;
+    margin-bottom: 0;
 }
 #currentlLiquidity {
 
@@ -84,6 +85,7 @@ h2 {
   background: #2b2b2b;
   box-shadow: rgba(0, 0, 0, 0.01) 0px 0px 1px, rgba(0, 0, 0, 0.04) 0px 4px 8px, rgba(0, 0, 0, 0.04) 0px 16px 24px, rgba(0, 0, 0, 0.01) 0px 24px 32px;
   border-radius: 10px;
+  margin: 20px 0 0 0;
 
 }
 #transaction div {
@@ -108,8 +110,9 @@ h2 {
 
 }
 #transaction p {
-  line-height:1.3;
-  padding:5px;
+  line-height:1.4;
+  padding:15px;
+  margin:0;
 }
 #bos {
   margin-top: 15px;
@@ -129,11 +132,9 @@ h2 {
 <body>
 <div class="box">
   <div id="uni"></div>
-	<p>The numbers in <em>Current liquidity</em> taken from the "pooled tokens" values found <a href="https://info.uniswap.org/pair/0x88ff79eb2bc5850f27315415da8685282c7610f9">here</a>. Learn more about this <a href="https://medium.com/scalar-capital/uniswap-a-unique-exchange-f4ef44f807bf#:~:text=Uniswap's%20goal%20for%20this%20particular,and%20k%20is%20the%20product.">here</a>.</p>
-
 <div class="cell" id="transaction">
-<p>Test a Buy or Sell to see price movement based on current liquidity.</p>
-
+<p>Test a Buy or Sell to see price movement based on current liquidity. Input a quantity below and the price shown at the bottom of the widget would be the token price after the transaction. This is an estimate based on the math used on uniswap. Learn more about this <a href="https://medium.com/scalar-capital/uniswap-a-unique-exchange-f4ef44f807bf#:~:text=Uniswap's%20goal%20for%20this%20particular,and%20k%20is%20the%20product.">here</a>. Initial liquidity taken from <a href="https://info.uniswap.org/pair/0x88ff79eb2bc5850f27315415da8685282c7610f9">here</a>.</p>
+<p>How does the liquidity pool affect the price when trades are made? Try some buying and selling with <a id="liqFive" href="#">5m</a> total liquidity and <a id="liqOneTwentyFive" href="#">125m</a> total liquidity and see how different sells affect the price with different levels of liquidity.</p>
     <label><a href="#" id="buyButton" class="selected">Buy</a> <a id="sellButton" href="#">Sell</a></label>
     <div>
         <input id="bos" type="text" placeholder="Amount to buy or sell" />
@@ -170,7 +171,6 @@ h2 {
   </div>
 </div>
 </div>
-<div id="tests"><p>How does the liquidty pool affect the price when trades are made? Try some buying and selling with <a id="liqFive" href="#">5m</a> total liquidity and <a id="liqOneTwentyFive" href="#">125m</a> total liquidity and see how different sells affect the price with different levels of liquidity.</p></div>
 <script>
 
 const url = 'https://api.ethplorer.io/getAddressInfo/0x88ff79eb2bc5850f27315415da8685282c7610f9?apiKey=EK-eGQ96-sc4Dbsu-59s1f'
