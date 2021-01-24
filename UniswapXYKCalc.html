@@ -92,23 +92,26 @@ h2 {
 #transaction div {
   margin:10px
 }
-#transaction label {
+#transaction div#contextUi {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   background: #222;
   margin:0 -10px
 }
-#transaction label a {
+#transaction div#contextUi a {
   flex-grow: 2;
   text-align: center;
   padding: 10px;
   border-bottom: 2px solid #222;
   text-decoration: none;
 }
-#transaction label a.selected {
+#transaction div#contextUi a.selected {
   border-bottom: 2px solid #f2a52b;
 
+}
+#learnPanel {
+  display: none;
 }
 #transaction p {
   line-height:1.4;
@@ -135,13 +138,18 @@ h2 {
   <div id="uni"></div>
 <div class="cell" id="transaction">
 <p>Test a Buy or Sell to see price movement based on current liquidity. Input a quantity below and the price shown at the bottom of the widget would be the token price after the transaction. This is an estimate based on the math used on uniswap. Learn more about this <a href="https://medium.com/scalar-capital/uniswap-a-unique-exchange-f4ef44f807bf#:~:text=Uniswap's%20goal%20for%20this%20particular,and%20k%20is%20the%20product.">here</a>. Initial liquidity taken from <a href="https://info.uniswap.org/pair/0x88ff79eb2bc5850f27315415da8685282c7610f9">here</a>.</p>
-<p>How does the liquidity pool affect the price when trades are made? Try some buying and selling with <a id="liqFive" href="#">5m</a> total liquidity and <a id="liqOneTwentyFive" href="#">125m</a> total liquidity and see how different sells affect the price with different levels of liquidity.</p>
-    <label><a href="#" id="buyButton" class="selected">Buy</a> <a id="sellButton" href="#">Sell</a></label>
+
+    <div id="contextUi">
+      <a href="#" id="buyButton" class="selected">Buy</a>
+      <a id="sellButton" href="#">Sell</a>
+      <a id="learnButton" href="#">Learn</a>
+    </div>
+<div id="learnPanel"><p>How does the liquidity pool affect the price when trades are made? Try some buying and selling with <a id="liqFive" href="#">5m</a> total liquidity and <a id="liqOneTwentyFive" href="#">125m</a> total liquidity and see how different sells affect the price with different levels of liquidity.</p></div>
     <div>
         <input id="bos" type="text" placeholder="Amount to buy or sell" />
     </div>
     <div>
-      <p>Price</p><input id="priceL" type="text" disabled />
+      <p>Token price after transaction</p><input id="priceL" type="text" disabled />
     </div>
 
   </div>
@@ -187,8 +195,7 @@ const esdLiqNew = document.getElementById('esdLiqNew');
 const usdcLiqNew = document.getElementById('usdcLiqNew');
 const priceL = document.getElementById('priceL');
 const bos = document.getElementById('bos');
-const buyButton = document.getElementById('buyButton');
-const sellButton = document.getElementById('sellButton');
+
 
 
 esdLiqInit.value = esdUniVal;
@@ -199,10 +206,17 @@ bos.focus();
 bos.select();
 
 const bsButtonHandler = function(e) {
-  sellButton.classList.remove('selected');
-  buyButton.classList.remove('selected');
+  document.querySelectorAll("#contextUi a").forEach((el) => {
+      el.classList.remove('selected');
+  });
   this.classList.add('selected');
   bosHandler();
+  if(this.id === 'learnButton'){
+    console.log(this.classList);
+    document.getElementById('learnPanel').style.display = 'block';
+  } else {
+    document.getElementById('learnPanel').style.display = 'none';
+  }
 }
 
 // for changing the initial liquidity fields
@@ -221,21 +235,23 @@ const liquidityHandler = function(e) {
 // for calculating a buy or sell
 const bosHandler = function(e) {
 
-  // recalculating k here:
+  // recalculating k here in case liqInit was changed:
   let k = esdLiqInit.value * usdcLiqInit.value
 
   //console.log(usdcLiqNew.value);
   if (bos.value < 0 || sellButton.classList.contains('selected')) {
 
+    // for bos.value < 0
+    let sell = Math.abs(bos.value);
     // selling so adding ESD to the pool:
-    esdLiqNew.value = Number(esdLiqInit.value) + Number(bos.value);
+    esdLiqNew.value = Number(esdLiqInit.value) + sell;
     // calculate new USDC supply in pool:
     usdcLiqNew.value = k / esdLiqNew.value;
 
   } else if (bos.value > 0) {
+
     // buying so adding USDC to the pool:
     usdcLiqNew.value = Number(usdcLiqInit.value) + Number(bos.value);
-
     // calculate new ESD supply in pool:
     esdLiqNew.value = k / usdcLiqNew.value;
 
@@ -250,8 +266,8 @@ const bosHandler = function(e) {
 usdcLiqInit.addEventListener('input', liquidityHandler);
 esdLiqInit.addEventListener('input', liquidityHandler);
 bos.addEventListener('input', bosHandler);
-buyButton.addEventListener('click', bsButtonHandler);
-sellButton.addEventListener('click', bsButtonHandler);
+const contextUi = document.querySelectorAll("#contextUi a");
+contextUi.forEach(el => el.addEventListener('click', bsButtonHandler))
 
 document.getElementById('liqOneTwentyFive').addEventListener('click', function(e){esdLiqInit.value = '62500000';usdcLiqInit.value = '62500000';liquidityHandler();});
 document.getElementById('liqFive').addEventListener('click', function(e){esdLiqInit.value = '2500000';usdcLiqInit.value = '2500000';liquidityHandler();});
