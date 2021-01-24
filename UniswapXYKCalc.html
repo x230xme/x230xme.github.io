@@ -159,7 +159,7 @@ span.ellipse {
     </div>
     <div id="learnPanel"><p>How does the liquidity pool affect the price when trades are made?</p><p>Try some buying and selling with different total liquidity in the Uniswap pool and see how different liquidity depths affects the price delta or volatility.</p><p>Set to <a id="liqFive" href="#">5m total liquidity</a> or <a id="liqOneTwentyFive" href="#">125m total liquidity</a> then click buy or sell to test different values and see variation from the peg. Note that by clicking those liquidity buttons this widget no longer represents live ESD data - refresh to reset to the live data.</p></div>
     <div id="tradePanel">
-        <input id="bos" type="text" placeholder="Amount to buy" />
+        <input id="bos" type="text" placeholder="Amount to buy" autofocus />
         <p class="tradePanelResult" id="tokenPriceBefore"><span>Token price before transaction:</span> <span id="tokenPriceBeforeHolder" class="ellipse"></span></p>
         <p class="tradePanelResult" id="tokenPriceAfter"><span>Token price after transaction:</span> <span id="tokenPriceAfterHolder" class="ellipse"></span></p>
         <p class="tradePanelResult" id="tokenPricePaid"><span>Average token price paid:</span> <span id="tokenPricePaidHolder" class="ellipse">-</span></p>
@@ -212,13 +212,11 @@ const tokenPricePaidHolder = document.getElementById('tokenPricePaidHolder');
 const bos = document.getElementById('bos');
 
 
-
 esdLiqInit.value = esdUniVal;
 usdcLiqInit.value = usdcUniVal;
 tokenPriceBeforeHolder.textContent = usdcLiqInit.value / esdLiqInit.value;
 
-bos.focus();
-bos.select();
+
 
 const bsButtonHandler = function(e) {
   document.querySelectorAll("#contextUi a").forEach((el) => {
@@ -230,7 +228,6 @@ const bsButtonHandler = function(e) {
   document.getElementById('bos').setAttribute('placeholder',msg);
 
   if(this.id === 'learnButton'){
-    console.log(this.classList);
     document.getElementById('learnPanel').style.display = 'block';
     document.getElementById('tradePanel').style.display = 'none';
   } else {
@@ -248,7 +245,7 @@ const liquidityHandler = function(e) {
   // reset buy or sell field
   bos.value = '';
   // calculate price based on initial liquidity
-  tokenPriceAfterHolder.textContent = usdcLiqInit.value / esdLiqInit.value;
+  tokenPriceBeforeHolder.textContent = usdcLiqInit.value / esdLiqInit.value;
 
 }
 
@@ -276,20 +273,25 @@ const bosHandler = function(e) {
     esdLiqNew.value = k / usdcLiqNew.value;
 
   }
-
   // New ESD price
   tokenPriceAfterHolder.textContent = usdcLiqNew.value / esdLiqNew.value;
   // calculate trade average price:
   tokenPricePaidHolder.textContent = Math.abs((usdcLiqNew.value-usdcLiqInit.value)/(esdLiqNew.value-esdLiqInit.value));
 
+
 }
 
+
+// event handlers
+// liquidity
 usdcLiqInit.addEventListener('input', liquidityHandler);
 esdLiqInit.addEventListener('input', liquidityHandler);
+// buy or sell
 bos.addEventListener('input', bosHandler);
+// contextUi buttons
 const contextUi = document.querySelectorAll("#contextUi a");
 contextUi.forEach(el => el.addEventListener('click', bsButtonHandler))
-
+// learn liquidity buttons
 document.getElementById('liqOneTwentyFive').addEventListener('click', function(e){esdLiqInit.value = '62500000';usdcLiqInit.value = '62500000';liquidityHandler();});
 document.getElementById('liqFive').addEventListener('click', function(e){esdLiqInit.value = '2500000';usdcLiqInit.value = '2500000';liquidityHandler();});
 
