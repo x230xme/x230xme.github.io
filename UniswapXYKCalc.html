@@ -136,6 +136,11 @@ h2 {
   padding: 3px !important;
   background: rgba(0,0,0,0.15);
 }
+span.ellipse {
+  max-width: 35%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
 </style>
 
 
@@ -155,9 +160,9 @@ h2 {
     <div id="learnPanel"><p>How does the liquidity pool affect the price when trades are made?</p><p>Try some buying and selling with different total liquidity in the Uniswap pool and see how different liquidity depths affects the price delta or volatility.</p><p>Set to <a id="liqFive" href="#">5m total liquidity</a> or <a id="liqOneTwentyFive" href="#">125m total liquidity</a> then click buy or sell to test different values and see variation from the peg. Note that by clicking those liquidity buttons this widget no longer represents live ESD data - refresh to reset to the live data.</p></div>
     <div id="tradePanel">
         <input id="bos" type="text" placeholder="Amount to buy" />
-        <p class="tradePanelResult" id="tokenPriceBefore"><span>Token price before transaction:</span> <span id="tokenPriceBeforeHolder"></span></p>
-        <p class="tradePanelResult" id="tokenPriceAfter"><span>Token price after transaction:</span> <span id="tokenPriceAfterHolder"></span></p>
-        <p class="tradePanelResult" id="tokenPricePaid"><span>Average token price paid:</span> <span id="tokenPricePaidHolder">-</span></p>
+        <p class="tradePanelResult" id="tokenPriceBefore"><span>Token price before transaction:</span> <span id="tokenPriceBeforeHolder" class="ellipse"></span></p>
+        <p class="tradePanelResult" id="tokenPriceAfter"><span>Token price after transaction:</span> <span id="tokenPriceAfterHolder" class="ellipse"></span></p>
+        <p class="tradePanelResult" id="tokenPricePaid"><span>Average token price paid:</span> <span id="tokenPricePaidHolder" class="ellipse">-</span></p>
     </div>
 
   </div>
