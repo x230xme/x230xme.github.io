@@ -144,12 +144,10 @@ h2 {
       <a id="sellButton" href="#">Sell</a>
       <a id="learnButton" href="#">Learn</a>
     </div>
-<div id="learnPanel"><p>How does the liquidity pool affect the price when trades are made?<br><br>Try some buying and selling with different total liquidity in the Uniswap pool and see how different liquidity depths affects the price delta or volatility. Set to <a id="liqFive" href="#">5m total liquidity</a> or <a id="liqOneTwentyFive" href="#">125m total liquidity</a> then click buy or sell to test different values and see variation from the peg. Note that by clicking those this widget no longer represents live ESD data - refresh to reset to the live data.</p></div>
-    <div>
-        <input id="bos" type="text" placeholder="Amount to buy or sell" />
-    </div>
-    <div>
-      <p>Token price after transaction</p><input id="priceL" type="text" disabled />
+    <div id="learnPanel"><p>How does the liquidity pool affect the price when trades are made?</p><p>Try some buying and selling with different total liquidity in the Uniswap pool and see how different liquidity depths affects the price delta or volatility.</p><p>Set to <a id="liqFive" href="#">5m total liquidity</a> or <a id="liqOneTwentyFive" href="#">125m total liquidity</a> then click buy or sell to test different values and see variation from the peg. Note that by clicking those liquidity buttons this widget no longer represents live ESD data - refresh to reset to the live data.</p></div>
+    <div id="tradePanel">
+        <input id="bos" type="text" placeholder="Amount to buy" />
+        <p>Token price after transaction</p><input id="priceL" type="text" disabled />
     </div>
 
   </div>
@@ -211,11 +209,16 @@ const bsButtonHandler = function(e) {
   });
   this.classList.add('selected');
   bosHandler();
+  let msg = (this.id === 'buyButton') ? 'Amount to buy':'Amount to sell';
+  document.getElementById('bos').setAttribute('placeholder',msg);
+
   if(this.id === 'learnButton'){
     console.log(this.classList);
     document.getElementById('learnPanel').style.display = 'block';
+    document.getElementById('tradePanel').style.display = 'none';
   } else {
     document.getElementById('learnPanel').style.display = 'none';
+    document.getElementById('tradePanel').style.display = 'block';
   }
 }
 
