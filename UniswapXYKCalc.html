@@ -185,10 +185,10 @@ span.ellipse {
     Liquidity before trade
   </h2>
   <div class="item">
-    <label>ESD</label><input id="esdLiqInit" type="text" />
+    <label>ESD</label><input id="tokenALiqInit" type="text" />
   </div>
   <div class="item">
-    <label>USDC</label><input id="usdcLiqInit" type="text" />
+    <label>USDC</label><input id="tokenBLiqInit" type="text" />
   </div>
 </div>
 
@@ -197,10 +197,10 @@ span.ellipse {
     Liquidity after trade
   </h2>
   <div class="item">
-    <label>ESD</label><input id="esdLiqNew" type="text" disabled />
+    <label>ESD</label><input id="tokenALiqNew" type="text" disabled />
   </div>
   <div class="item">
-    <label>USDC</label><input id="usdcLiqNew" type="text" disabled />
+    <label>USDC</label><input id="tokenBLiqNew" type="text" disabled />
   </div>
 </div>
 </div>
@@ -211,21 +211,21 @@ fetch(url)
 .then(res => res.json())
 .then((data) => {
 
-const esdUniVal = data.tokens[1].balance.toLocaleString('fullwide', {useGrouping:false})/1000000000000000000;
-const usdcUniVal = data.tokens[2].balance.toLocaleString('fullwide', {useGrouping:false})/1000000;
-const esdLiqInit = document.getElementById('esdLiqInit');
-const usdcLiqInit = document.getElementById('usdcLiqInit');
-const esdLiqNew = document.getElementById('esdLiqNew');
-const usdcLiqNew = document.getElementById('usdcLiqNew');
+const tokenAUniVal = data.tokens[1].balance.toLocaleString('fullwide', {useGrouping:false})/1000000000000000000;
+const tokenBUniVal = data.tokens[2].balance.toLocaleString('fullwide', {useGrouping:false})/1000000;
+const tokenALiqInit = document.getElementById('tokenALiqInit');
+const tokenBLiqInit = document.getElementById('tokenBLiqInit');
+const tokenALiqNew = document.getElementById('tokenALiqNew');
+const tokenBLiqNew = document.getElementById('tokenBLiqNew');
 const tokenPriceBeforeHolder = document.getElementById('tokenPriceBeforeHolder');
 const tokenPriceAfterHolder = document.getElementById('tokenPriceAfterHolder');
 const tokenPricePaidHolder = document.getElementById('tokenPricePaidHolder');
 const bos = document.getElementById('bos');
 
 
-esdLiqInit.value = esdUniVal;
-usdcLiqInit.value = usdcUniVal;
-tokenPriceBeforeHolder.textContent = usdcLiqInit.value / esdLiqInit.value;
+tokenALiqInit.value = tokenAUniVal;
+tokenBLiqInit.value = tokenBUniVal;
+tokenPriceBeforeHolder.textContent = tokenBLiqInit.value / tokenALiqInit.value;
 
 
 
@@ -251,12 +251,12 @@ const bsButtonHandler = function(e) {
 const liquidityHandler = function(e) {
 
   // reset new liquidity fields to avoid confusion:
-  esdLiqNew.value = '';
-  usdcLiqNew.value = '';
+  tokenALiqNew.value = '';
+  tokenBLiqNew.value = '';
   // reset buy or sell field
   bos.value = '';
   // calculate price based on initial liquidity
-  tokenPriceBeforeHolder.textContent = usdcLiqInit.value / esdLiqInit.value;
+  tokenPriceBeforeHolder.textContent = tokenBLiqInit.value / tokenALiqInit.value;
 
 }
 
@@ -264,30 +264,30 @@ const liquidityHandler = function(e) {
 const bosHandler = function(e) {
 
   // recalculating k here in case liqInit was changed:
-  let k = esdLiqInit.value * usdcLiqInit.value
+  let k = tokenALiqInit.value * tokenBLiqInit.value
 
   // selling
   if (bos.value < 0 || sellButton.classList.contains('selected')) {
 
     // for bos.value < 0
     let sell = Math.abs(bos.value);
-    // selling so adding ESD to the pool:
-    esdLiqNew.value = Number(esdLiqInit.value) + sell;
-    // calculate new USDC supply in pool:
-    usdcLiqNew.value = k / esdLiqNew.value;
+    // selling so adding tokenA to the pool:
+    tokenALiqNew.value = Number(tokenALiqInit.value) + sell;
+    // calculate new tokenB supply in pool:
+    tokenBLiqNew.value = k / tokenALiqNew.value;
 
   } else if (bos.value > 0) {
 
-    // buying so adding USDC to the pool:
-    usdcLiqNew.value = Number(usdcLiqInit.value) + Number(bos.value);
-    // calculate new ESD supply in pool:
-    esdLiqNew.value = k / usdcLiqNew.value;
+    // buying so adding tokenB to the pool:
+    tokenBLiqNew.value = Number(tokenBLiqInit.value) + Number(bos.value);
+    // calculate new tokenA supply in pool:
+    tokenALiqNew.value = k / tokenBLiqNew.value;
 
   }
-  // New ESD price
-  tokenPriceAfterHolder.textContent = usdcLiqNew.value / esdLiqNew.value;
+  // New tokenA price
+  tokenPriceAfterHolder.textContent = tokenBLiqNew.value / tokenALiqNew.value;
   // calculate trade average price:
-  tokenPricePaidHolder.textContent = Math.abs((usdcLiqNew.value-usdcLiqInit.value)/(esdLiqNew.value-esdLiqInit.value));
+  tokenPricePaidHolder.textContent = Math.abs((tokenBLiqNew.value-tokenBLiqInit.value)/(tokenALiqNew.value-tokenALiqInit.value));
 
 
 }
@@ -295,16 +295,16 @@ const bosHandler = function(e) {
 
 // event handlers
 // liquidity
-usdcLiqInit.addEventListener('input', liquidityHandler);
-esdLiqInit.addEventListener('input', liquidityHandler);
+tokenBLiqInit.addEventListener('input', liquidityHandler);
+tokenALiqInit.addEventListener('input', liquidityHandler);
 // buy or sell
 bos.addEventListener('input', bosHandler);
 // contextUi buttons
 const contextUi = document.querySelectorAll("#contextUi a");
 contextUi.forEach(el => el.addEventListener('click', bsButtonHandler))
 // learn liquidity buttons
-document.getElementById('liqOneTwentyFive').addEventListener('click', function(e){esdLiqInit.value = '62500000';usdcLiqInit.value = '62500000';liquidityHandler();});
-document.getElementById('liqFive').addEventListener('click', function(e){esdLiqInit.value = '2500000';usdcLiqInit.value = '2500000';liquidityHandler();});
+document.getElementById('liqOneTwentyFive').addEventListener('click', function(e){tokenALiqInit.value = '62500000';tokenBLiqInit.value = '62500000';liquidityHandler();});
+document.getElementById('liqFive').addEventListener('click', function(e){tokenALiqInit.value = '2500000';tokenBLiqInit.value = '2500000';liquidityHandler();});
 
 
 });
